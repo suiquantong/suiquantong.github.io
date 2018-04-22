@@ -1,0 +1,29 @@
+  private void test1(HttpServletRequest request) {  
+        System.out.println("---------获取请求头方式1-------------");  
+        // 拿到指定的请求头  
+        System.out.println(request.getHeader("cache-control"));  
+
+        System.out.println("---------获取请求头方式2-------------");  
+        // 拿到所有指定的请求头  
+        Enumeration e = request.getHeaders("cache-control");  
+        while (e.hasMoreElements()) {  
+            String headValue = (String) e.nextElement();  
+            System.out.println(headValue);  
+        }  
+
+        System.out.println("---------获取请求头方式3-------------");  
+        // 拿到所有请求头  
+        Enumeration e1 = request.getHeaderNames();  
+        while (e1.hasMoreElements()) {  
+            String headerName = (String) e1.nextElement();  
+            String headValue = request.getHeader(headerName);  
+            System.out.println(headerName + "=" + headValue);  
+        }  
+    }  
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)  
+            throws ServletException, IOException {  
+        doGet(request, response);  
+    }  
+
+}  
