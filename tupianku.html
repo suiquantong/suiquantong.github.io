@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>图片库</title>
+
+<body>
+
+<ul>  <li><a href="images/a.jpg"onclick="showPic(this);return false;"title="aaaaa">Fireworks</a></li>  <li><a href="images/b.jpg"onclick="showPic(this);return false;"title="bbbbb">Coffee</a></li>
+
+  <li><a href="images/c.jpg"onclick="showPic(this);return false;"title="ccccc">Rose</a></li>
+
+  <li><a href="images/d.jpg"onclick="showPic(this);return false;"title="ddddd">BigBen</a></li>
+
+</ul>
+
+  <img src="images/1.jpg" alt="my image gallery" height="488" id="placeholder">
+
+  <p id="description">Chiise an image.</p>
+  
+<script type="text/javascript" > 
+function showPic(whichpic){
+        var source = whichpic.getAttribute("href");
+        var placeholder=document.getElementById("placeholder");
+        placeholder.setAttribute("src",source);
+	var text = whichpic.getAttribute("title");
+
+	var description =  document.getElementById("description");
+
+	description.firstChild.nodeValue = text; 
+}
+
+</script>
+
+</body>
+
+</html>
