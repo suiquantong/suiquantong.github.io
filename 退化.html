@@ -1,0 +1,27 @@
+<html>
+<head>
+
+<title>弹窗</title>
+<body>
+//禁用无法使用
+<a href="javascript:popUp('http://www.baidu.com/');">点点</a><br/>
+
+//双链接
+<a href="http://www.baidu.com/"onclick="popUp('http://www.baidu.com/');return false;"title="ccccc">Rose</a><br/>
+
+
+//单链接
+<a href="http://www.baidu.com/"onclick="popUp(this.getAttribute('href'));return false;"title="ccccc">Rose</a><br/>
+
+
+//使用DOM提供的this.href
+<a href="http://www.baidu.com/"onclick="popUp(this.href);return false;"title="ccccc">Rose</a><br/>
+
+
+<script>
+function popUp(WinURL){
+window.open(WinURL,"popup","width=320,height=480");
+}
+</script>
+</body>
+</html>
