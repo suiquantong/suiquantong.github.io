@@ -1,0 +1,186 @@
+//建表
+
+CREATE TABLE student08sqt(
+Sno CHAR(4)PRIMARY KEY,
+Sname CHAR(40)UNIQUE,
+Ssex CHAR(2),
+Sage SMALLINT,
+Sdept CHAR(20)
+);
+
+
+CREATE TABLE SC08sqt(
+Sno CHAR(9),
+Cno CHAR(4),
+Grade SMALLINT,
+PRIMARY KEY(Sno,Cno),
+FOREIGN key(Sno)REFERENCES student08sqt(Sno),
+FOREIGN KEY(Cno)REFERENCES course08sqt(Cno)
+);
+
+CREATE TABLE course08sqt(
+Cno CHAR(4)PRIMARY KEY,
+Cname CHAR(40)NOT NULL,
+Cpno CHAR(4),
+Ccredit SMALLINT,
+FOREIGN key(Cpno)REFERENCES course08sqt(Cno)
+);
+
+
+//添加记录
+INSERT INTO student08sqt(Sno,Sname,Ssex,Sage,Sdept) VALUES(3,'xom','x',21,620);
+INSERT INTO student08sqt(Sno,Sname,Ssex,Sage,Sdept) VALUES(1,'aom','l',20,621);
+INSERT INTO student08sqt(Sno,Sname,Ssex,Sage,Sdept) VALUES(2,'bom','x',22,622);
+
+INSERT INTO student08sqt(Sno,Sname,Ssex,Sage,Sdept) 
+VALUES(4,'1om','x',21,620),(5,'2om','x',21,620),(6,'3om','x',21,620);
+
+INSERT INTO course08sqt() 
+VALUES(1,'高数',1,100),(2,'线代',2,100),(3,'数据库',2,100);
+
+INSERT INTO sc08sqt() //最多三个
+VALUES(1,1,85),(2,3,88),(3,2,78)(2,2,98);
+
+
+
+//修改列的数据类型
+ALTER TABLE student08sqt
+ MODIFY COLUMN Sage tinyint;
+
+//修改某一个值
+UPDATE sc08sqt set Grade=89
+ WHERE Sno=6 AND Cno=3;
+
+
+//删除表中的某一列
+alter table student08sqt
+drop column Sage;
+
+
+
+//唯一约束
+alter table student add unique key(Sname);
+
+//约束默认值为男
+alter table student08sqt alter Ssex set default '男';
+
+//grade>0and grade<100
+alter table sc08sqt add  check (Grade>0 and Grade<100);
+
+//添加一列出生日期
+alter table student08sqt add column deta Sdate not null;
+
+//查询 
+//查询某一列 *表示全部
+1.SELECT Sno 
+FROM student08sqt 
+ 
+//查询年龄小于25岁的
+2.SELECT Sname
+  FROM student08sqt WHERE Sage<25; 
+
+//出生日期1990年之前
+  SELECT Sname,Sage,2018-Sage
+  FROM student08sqt WHERE 2018-Sage<1998;
+
+//查询1990年以前出生的女生信息
+  SELECT Sname,Sdeta,Ssex  
+  FROM student08sqt  WHERE YEAR(Sdeta)>1997 AND Ssex= 'l';
+
+//COUNT（统计） SUM AVG MAX MIN  函数 来求值
+  SELECT Max(Grade) FROM sc08sqt WHERE Cno=2;
+
+//隐士链接
+  SELECT student08sqt.*,sc08sqt.*
+  FROM student08sqt,sc08sqt WHERE student08sqt.Sno=sc08sqt.Sno;
+
+
+//查询学生学号、姓名、课程号和成绩（包括未选修课程的学生的信息）。
+3.SELECT student08sqt.Sno,Sname,Cno,Grade
+  FROM student08sqt LEFT OUTER JOIN sc08sqt
+  ON(student08sqt.Sno=sc08sqt.Sno)
+
+//查询学生学号、姓名、课程号和成绩（只包括选修了课程的学生的信息）。
+4.SELECT student08sqt.Sno,Sname,Cno,Grade
+  FROM student08sqt , sc08sqt
+  WHERE(student08sqt.Sno=sc08sqt.Sno);
+
+//查询学生学号、姓名、课程名和成绩。
+5.SELECT student08sqt.Sno,Sname,Grade,Cname
+  FROM student08sqt,sc08sqt,course08sqt
+  WHERE student08sqt.Sno=sc08sqt.Sno AND sc08sqt.Cno=course08sqt.Cno
+
+
+
+//查询所有与“数据库”有关的课程的信息。//选择从哪几个表里找
+6.SELECT *
+  FROM student08sqt,sc08sqt,course08sqt
+  HAVING Cname ='数据库'
+
+
+
+
+//按学分降序显示课程表中的信息。降序：select * from 表名order by表中的字段desc
+7.SELECT *
+  FROM course08sqt
+  ORDER BY Ccredit DESC
+
+
+//统计选课成绩表中每门课的平均成绩和选课总人数。
+8. SELECT Cno, AVG(Grade),COUNT(Sno)
+   FROM sc08sqt
+   GROUP BY Cno;  //GROUP BY 语句用于结合聚合函数，根据一个或多个列对结果集进行分组
+
+
+//查询未选修课程的学生的学号和姓名
+9.SELECT Sno,Sname
+  FROM student08sqt
+  WHERE NOT EXISTS
+    (SELECT*
+     FROM sc08sqt
+     WHERE Sno= student08sqt.Sno
+    );
+
+//查询02号课程的成绩比03号课程高的学生的学号
+10.  SELECT a.Sno
+	FROM sc08sqt a,sc08sqt b
+	WHERE a.grade>b.grade
+     	and a.Cno='2'
+    	and b.Cno='3';
+
+
+//视图
+1.创建视图显示学生的学号、姓名、课程号、成绩
+    CREATE  VIEW VIEW_student
+	AS SELECT
+	student08sqt.Sno,Sname,sc08sqt.Cno,Grade	
+        FROM student08sqt,sc08sqt
+	WHERE student08sqt.Sno=sc08sqt.Sno
+
+
+2.视图显示学号、姓名、课程名、成绩
+    CREATE  VIEW VIEW_student1
+	AS SELECT
+	student08sqt.Sno,Sname,course08sqt.Cname,sc08sqt.Grade
+	FROM student08sqt,sc08sqt,course08sqt
+	WHERE student08sqt.Sno=sc08sqt.Sno 
+			AND sc08sqt.Cno=course08sqt.Cno
+3.视图修改001号张三02课程的成绩为88.
+	UPDATE VIEW_student
+	SET Grade='88'
+	WHERE Sno='1' AND Cno='2';			//AND Sname'张三'
+
+4.创建另一视图只显示学号和姓名
+	CREATE VIEW view_student2
+	AS 
+	SELECT student08sqt.Sno,Sname
+5.删除视图
+	DROP VIEW view_student2；
+
+
+//安全
+
+
+
+
+ 
