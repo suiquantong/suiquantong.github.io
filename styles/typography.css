@@ -3,7 +3,7 @@ body {
   font-size: 10pt;
 }
 abbr {
-  text-decoration: none;
+  text-decoration: underline;
   border: 0;
   font-style: normal;
 }
